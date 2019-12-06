@@ -31,6 +31,13 @@ void spinCube()
 	glutPostRedisplay();
 }
 
+void mouse(int button, int state, int x, int y)
+{
+	//mouse callback, selects an axis about which to rotate
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) axis = 0;
+	if (button == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) axis = 1;
+	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) axis = 2;
+}
 
 void myReshape(int width, int height)
 {
@@ -41,3 +48,22 @@ void myReshape(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
+void test_main(int argc, char** argv)
+{
+	//need both double buffering and z buffer
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(500, 500);
+	glutCreateWindow("Spinning Colorcube");
+	glutReshapeFunc(myReshape);
+	glutDisplayFunc(display);
+	glutIdleFunc(spinCube);
+	glutMouseFunc(mouse);
+	glEnable(GL_DEPTH_TEST);//Enable hidden surface removal
+	glEnableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+	glColorPointer(3, GL_FLOAT, 0, colors);
+	glColor3f(1.0, 1.0, 1.0);
+	glutMainLoop();
+}
